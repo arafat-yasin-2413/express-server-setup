@@ -1,18 +1,15 @@
 import type { Request, Response } from "express";
 import { authService } from "./auth.service.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
 
-const userLogin = async(req: Request, res:Response) =>{
-    const {email, password } = req.body;
+const userLogin = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
 
-    const result = await authService.userLogin(email, password)
+    const result = await authService.userLogin(email, password);
 
-    res.send({
-        success: true, 
-        message: "Log in successfull",
-        data: result,
-    })
-}
+    ApiResponse.success(res, 200, "Logged in Successfully", result);
+};
 
 export const authController = {
     userLogin,
-}
+};
