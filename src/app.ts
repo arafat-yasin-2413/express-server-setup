@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import router from "./router/routes.js";
 import { globalErrorHandler } from "./middleware/globalErrorHandler.js";
+import notFound from "./middleware/notFound.js";
 
 export const app: Application = express();
 
@@ -23,4 +24,5 @@ app.get("/", (request: Request, res: Response) => {
     });
 });
 
-app.use(globalErrorHandler)
+app.use(notFound); 
+app.use(globalErrorHandler);
