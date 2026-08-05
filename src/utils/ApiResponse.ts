@@ -1,4 +1,5 @@
 import type { Response } from "express";
+import { env } from "../config/env.js";
 
 const success = (
     res: Response,
@@ -25,7 +26,7 @@ const error = (
         statusCode,
         message,
         // stack: error.stack,
-        ...(process.env.NODE_ENV === "development" && { stack: error.stack }),
+        ...(env.nodeEnv === "development" && { stack: error.stack }),
     });
 };
 
