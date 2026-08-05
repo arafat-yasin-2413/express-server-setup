@@ -17,7 +17,6 @@ const bootstrap = async () => {
         });
 
         // gracefully shutdown - Reusable function
-
         const handleShutdown = (eventName:string, exitCode = 0) =>{
             return (error:any) =>{
                 server.close(()=>{
@@ -31,36 +30,6 @@ const bootstrap = async () => {
         process.on('SIGINT', handleShutdown('SIGINT', 0));
         process.on('uncaughtException', handleShutdown('uncaughtException', 1));
         process.on('unhandledRejection', handleShutdown('unhandledRejection', 1));
-
-        // process.on('SIGTERM', ()=>{
-        //     server.close(()=>{
-        //         console.log('Sigterm gracefully shutdown!')
-        //         process.exit(0)
-        //     })
-        // })
-        
-        // process.on('SIGINT', ()=>{
-        //     server.close(()=>{
-        //         console.log('Sigint gracefully shutdown!')
-        //         process.exit(0)
-        //     })
-        // })
-        
-
-        // // shutdown occure for error
-        // process.on('uncaughtException', (error)=>{
-        //     server.close(()=>{
-        //         console.log('uncaughtException gracefully shutdown! ', error)
-        //         process.exit(1)
-        //     })
-        // })
-        
-        // process.on('unhandledRejection', (error)=>{
-        //     server.close(()=>{
-        //         console.log('unhandledRejection gracefully shutdown! ', error)
-        //         process.exit(1)
-        //     })
-        // })
 
     } catch (error) {
         console.error("Server Stopped: ", error);
