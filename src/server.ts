@@ -7,18 +7,70 @@ dotenv.config();
 const port = env.port;
 
 // in production, we use httpServer
-let server: Server
+let server: Server;
 
-const httpServer = http.createServer()
-server = httpServer.listen(port, ()=>{
-    console.log(`Http Server is Running on port : ${port}`)
-})
+const bootstrap = async () => {
+    try {
+        const httpServer = http.createServer();
+        server = httpServer.listen(port, () => {
+            console.log(`Http Server is Running on port : ${port}`);
+        });
 
+        // gracefully shutdown - Reusable function
 
+        const handleShutdown = (eventName:string, exitCode = 0) =>{
+            return (error:any) =>{
+                server.close(()=>{
+                    console.log(`${eventName} gracefully shutdown! `, error || '');
+                    process.exit(exitCode);
+                });
+            }
+        }
+
+        process.on('SIGTERM', handleShutdown('SIGTERM', 0));
+        process.on('SIGINT', handleShutdown('SIGINT', 0));
+        process.on('uncaughtException', handleShutdown('uncaughtException', 1));
+        process.on('unhandledRejection', handleShutdown('unhandledRejection', 1));
+
+        // process.on('SIGTERM', ()=>{
+        //     server.close(()=>{
+        //         console.log('Sigterm gracefully shutdown!')
+        //         process.exit(0)
+        //     })
+        // })
+        
+        // process.on('SIGINT', ()=>{
+        //     server.close(()=>{
+        //         console.log('Sigint gracefully shutdown!')
+        //         process.exit(0)
+        //     })
+        // })
+        
+
+        // // shutdown occure for error
+        // process.on('uncaughtException', (error)=>{
+        //     server.close(()=>{
+        //         console.log('uncaughtException gracefully shutdown! ', error)
+        //         process.exit(1)
+        //     })
+        // })
+        
+        // process.on('unhandledRejection', (error)=>{
+        //     server.close(()=>{
+        //         console.log('unhandledRejection gracefully shutdown! ', error)
+        //         process.exit(1)
+        //     })
+        // })
+
+    } catch (error) {
+        console.error("Server Stopped: ", error);
+    }
+};
+
+bootstrap();
 
 // express server of node js.
 // jodio , behind the scene eta httpServer kei call dicche.
 // app.listen(port, () => {
 //     console.log(`Server is running on port : ${port}`);
 // });
-
