@@ -97,18 +97,208 @@ create table employees (
 
 
 -- creates accounts table
-create table accounts (
-    id serial primary key,
-    name text not null,
-    manager_id int , 
-    foreign key (manager_id) references employees(id)
-)
+CREATE TABLE accounts (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    balance NUMERIC(10, 2) CHECK (balance >= 0)
+);
+-- drop table accounts;
+--- INSERT Operations -------
+
+
+-- Insert departments
+INSERT INTO departments (name) 
+VALUES ('CSE'), ('EEE'), ('ME');
+
+SELECT * from departments;
+
+
+-- Insert Students
+INSERT INTO students (name, email, age, department_id)
+VALUES 
+('John', 'john@gmail.com', 20, 1),
+('Alex', 'alex@gmail.com', 21, 1),
+('Bob', 'bob@yahoo.com', 26, 2),
+('Alice', 'alice@gmail.com', NULL, 2),
+('Charlie', 'charlie@gmail.com', 19, NULL);
+
+SELECT * from students;
+
+
+-- Insert Users & Profiles (One-to-One)
+INSERT INTO users (id, name, is_active, profile_data) 
+VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'David', true, '{"role": "admin", "theme": "dark"}');
+
+
+INSERT INTO profiles (user_id, phone, salary, bio)
+VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '+8801700000000', 45000.50, 'Software Engineer');
 
 
 
+-- Insert Courses & Student Courses (Many-to-Many)
+INSERT INTO courses (title) VALUES ('Database Systems'), ('Algorithms'), ('Circuit Analysis');
+
+INSERT INTO student_courses (student_id, course_id) 
+VALUES 
+(1, 1), -- John -> Database
+(1, 2), -- John -> Algorithms
+(2, 1), -- Alex -> Database
+(3, 3); -- Bob  -> Circuit Analysis
+
+
+-- Insert Orders & Shipments (Composite Keys)
+INSERT INTO orders (order_id, product_id) VALUES (101, 1), (101, 2);
+
+INSERT INTO shipments (order_id, product_id, tracking_number) 
+VALUES (101, 1, 'TRK-99001');
+
+
+-- Insert Employees (Self Relationship)
+INSERT INTO employees (name, manager_id) 
+VALUES 
+('Rahim (CEO)', NULL),
+('Karim (Manager)', 1),
+('Sajid (Developer)', 2);
+
+
+-- Insert Accounts (Transaction testing)
+INSERT INTO accounts (name, balance) 
+VALUES ('Sender', 500.00), ('Receiver', 200.00);
+
+-- Insert Accounts (Transaction testing)
+INSERT INTO accounts (name, balance) 
+VALUES ('Sender', 500.00), ('Receiver', 200.00);
+
+------- SELECT, UPDATE, DELETE & FILTERING
+-- Basic SELECT
+SELECT * FROM students;
+
+-- UPDATE
+UPDATE students
+SET age = 25
+WHERE id = 1;
+
+-- DELETE
+DELETE FROM students
+WHERE id = 5; -- Deletes Charlie
+
+-- Filtering (WHERE & Operators)
+SELECT * FROM students WHERE age > 20;
+
+-- AND, OR, NOT, BETWEEN, IN, LIKE, ILIKE, IS NULL
+SELECT * FROM students WHERE age BETWEEN 18 AND 25;
+
+SELECT * FROM students WHERE age NOT BETWEEN 18 AND 25;
+
+SELECT * FROM students WHERE name LIKE 'A%';         -- Starts with 'A'
+
+SELECT * FROM students WHERE name LIKE '%x';         -- Ends with 'x'
+
+SELECT * FROM students WHERE name LIKE '%li%';       -- Contains 'li'
+
+SELECT * FROM students WHERE email ILIKE '%GMAIL%';  -- Case insensitive search
+
+SELECT * FROM students WHERE id IN (1, 2, 5);
+
+SELECT * FROM students WHERE id NOT IN (1, 2, 5);
+
+SELECT * FROM students WHERE age IS NULL;
+
+SELECT * FROM students WHERE age IS NOT NULL;
 
 
 
+-- SORTING, LIMIT, OFFSET & ALIASES
+
+-- Sorting & Aliases
+SELECT 
+    name AS student_name, 
+    age AS student_age 
+FROM students
+ORDER BY age DESC;
+
+-- Limit & Offset
+SELECT * FROM students
+ORDER BY id ASC
+LIMIT 2 OFFSET 1;
 
 
+-- AGGREGATE FUNCTIONS, GROUP BY & HAVING
 
+-- Aggregate Functions
+SELECT 
+    COUNT(*) AS total_students,
+    AVG(age) AS average_age,
+    MAX(age) AS max_age,
+    MIN(age) AS min_age,
+    SUM(age) AS sum_of_ages
+FROM students;
+
+-- GROUP BY & HAVING
+SELECT 
+    department_id, 
+    COUNT(*) AS total_students
+FROM students
+GROUP BY department_id
+HAVING COUNT(*) >= 1;
+
+
+-- JOINS
+
+-- INNER JOIN
+SELECT students.name AS student, departments.name AS department
+FROM students
+INNER JOIN departments ON students.department_id = departments.id;
+
+-- LEFT JOIN
+SELECT students.name AS student, departments.name AS department
+FROM students
+LEFT JOIN departments ON students.department_id = departments.id;
+
+-- RIGHT JOIN
+SELECT students.name AS student, departments.name AS department
+FROM students
+RIGHT JOIN departments ON students.department_id = departments.id;
+
+-- FULL OUTER JOIN
+SELECT students.name AS student, departments.name AS department
+FROM students
+FULL JOIN departments ON students.department_id = departments.id;
+
+-- Self Join (Employees with Manager name)
+SELECT 
+    e.name AS employee_name, 
+    m.name AS manager_name
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.id;
+
+
+-- INDEX, VIEW & TRANSACTIONS
+
+-- INDEX Creation
+CREATE INDEX idx_email ON students(email);
+
+-- VIEW Creation
+CREATE VIEW adult_students AS
+SELECT id, name, email, age 
+FROM students 
+WHERE age >= 18;
+
+-- Querying the View
+SELECT * FROM adult_students;
+
+-- TRANSACTION
+BEGIN;
+
+UPDATE accounts
+SET balance = balance - 100
+WHERE id = 1;
+
+UPDATE accounts
+SET balance = balance + 100
+WHERE id = 2;
+
+COMMIT;
+
+-- Check Accounts
+SELECT * FROM accounts;
