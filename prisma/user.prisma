@@ -1,5 +1,6 @@
-model users {
+model User {
     id   String @default(uuid())
     name String
     email String @unique
+    bio String 
 }

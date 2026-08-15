@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { app } from "./app.js";
 import { env } from "./config/env.js";
 import http, { type Server } from "http";
-import { prisma } from "./lib/prisma.js";
+import { connectDatabase, prisma } from "./lib/prisma.js";
 dotenv.config();
 
 const port = env.port;
@@ -13,10 +13,7 @@ let server: Server;
 const bootstrap = async () => {
     try {
 
-        await prisma.$connect();
-        await prisma.$queryRaw`select 1`
-        console.log("Database connected successfully.");
-        
+        connectDatabase();
         const httpServer = http.createServer(app);
 
         server = httpServer.listen(port, () => {
