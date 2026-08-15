@@ -8,4 +8,5 @@ const envVariables = envValidate();
 export const env = {
     port : envVariables.PORT,
     nodeEnv: envVariables.NODE_ENV,
+    databaseUrl: envVariables.DATABASE_URL,
 }
