@@ -1,6 +1,9 @@
 model User {
-    id   String @default(uuid())
-    name String
-    email String @unique
-    bio String 
+  id       String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  bio      String
+  products Product[]
 }
+
+// one user --> multiple product One to Many

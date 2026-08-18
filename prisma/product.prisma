@@ -1,5 +1,11 @@
 model Product {
-    id   String @id @default(uuid())
-    name String
-    slug String @unique
+  id          String @id @default(uuid())
+  name        String
+  slug        String @unique
+  price       Int
+  category    String
+  description String
+
+  userId String
+  users  User?   @relation(fields: [userId], references: [id])
 }
