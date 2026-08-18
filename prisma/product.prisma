@@ -9,3 +9,4 @@ model Product {
   userId String
   users  User?   @relation(fields: [userId], references: [id])
 }
+
