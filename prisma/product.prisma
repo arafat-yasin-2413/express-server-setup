@@ -7,6 +7,5 @@ model Product {
   description String
 
   userId String
-  users  User?   @relation(fields: [userId], references: [id])
+  users  User?  @relation(fields: [userId], references: [id])
 }
-
