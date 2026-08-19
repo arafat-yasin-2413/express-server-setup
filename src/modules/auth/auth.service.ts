@@ -51,7 +51,9 @@ const userLogin = async(data: userLoginType) => {
     if (existedUser.email !== data.email || !isPasswordValid)
         throw new AppError(httpStatus.UNAUTHORIZED,"Invalid email or password");
 
-    return existedUser
+    const { password: _password, ...safeUser } = existedUser
+    // return {_password, safeUser}
+    return safeUser;
 };
 
 
