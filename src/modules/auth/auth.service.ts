@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/AppError.js";
-import type { userRegisterType } from "./auth.validation.js";
+import type { userLoginType, userRegisterType } from "./auth.validation.js";
 import httpStatus from 'http-status-codes'
 import bcrypt from 'bcrypt'
 import { env } from "../../config/env.js";
@@ -36,18 +36,22 @@ const userRegister = async (data: userRegisterType) =>{
 
 
 
-const userLogin = async (email: string, password: string) => {
-    const user = {
-        email: "newuser@gmail.com",
-        password: "123456",
-    };
+const userLogin = async(data: userLoginType) => {
+    
+    const existedUser = await prisma.user.findFirst({
+        where: {
+            email: data.email
+        }
+    })
 
-    if (!user) throw new AppError(404,"user not found!");
+    if (!existedUser) throw new AppError(httpStatus.NOT_FOUND,"user not found!");
+    const isPasswordValid = await bcrypt.compare(data.password, existedUser.password);
 
-    if (user.email !== email || user.password !== password)
-        throw new AppError(403,"Invalid email or password");
 
-    return user
+    if (existedUser.email !== data.email || !isPasswordValid)
+        throw new AppError(httpStatus.UNAUTHORIZED,"Invalid email or password");
+
+    return existedUser
 };
 
 
