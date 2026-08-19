@@ -6,6 +6,9 @@ const router: Router = Router()
 
 router.post("/register", authController.userRegister)
 router.post("/login", authController.userLogin)
+router.delete("/delete", authController.deleteUser);
+router.patch("/update", authController.updateUser);
+router.get("/getUser", authController.getUser); 
 
 // router.post("/register",envValidate, authController.userRegister)
 // router.post("/login",envValidate, authController.userLogin)

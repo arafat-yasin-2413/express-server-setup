@@ -18,7 +18,35 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
     ApiResponse.success(res, 200, "Logged in Successfully", result);
 });
 
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+    const {id} = req.body;
+
+    const result = await authService.deleteUser(id);
+
+    ApiResponse.success(res, 200, "User deleted Successfully", result);
+});
+
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+    const {id} = req.body;
+    const data = req.body;
+
+    const result = await authService.updateUser(id, data);
+
+    ApiResponse.success(res, 200, "User updated Successfully", result);
+});
+
+const getUser = catchAsync(async (req: Request, res: Response) => {
+    const {id} = req.body;
+
+    const result = await authService.getUser(id);
+
+    ApiResponse.success(res, 200, "User get Successfull", result);
+});
+
 export const authController = {
     userLogin,
     userRegister,
+    deleteUser,
+    updateUser,
+    getUser,
 };
