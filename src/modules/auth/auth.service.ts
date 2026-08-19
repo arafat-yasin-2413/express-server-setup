@@ -2,6 +2,8 @@ import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/AppError.js";
 import type { userRegisterType } from "./auth.validation.js";
 import httpStatus from 'http-status-codes'
+import bcrypt from 'bcrypt'
+import { env } from "../../config/env.js";
 
 const userRegister = async (data: userRegisterType) =>{
     // is the user exists in the database?
@@ -12,14 +14,19 @@ const userRegister = async (data: userRegisterType) =>{
     })
 
     if(existingUser) throw new AppError(httpStatus.CONFLICT, 'User already registered!')
-        
-    await prisma.user.create({
+    
+    const hashedPassword = await bcrypt.hash(data.password, Number(env.saltRound));   
+
+    const user = await prisma.user.create({
         data: {
             name: data.name,
             email: data.email,
-            password: data.password,
+            password: hashedPassword,
         }
     })    
+
+    return user
+
 }
 
 
@@ -41,5 +48,6 @@ const userLogin = async (email: string, password: string) => {
 
 export const authService = {
     userLogin,
+    userRegister,
 
 }

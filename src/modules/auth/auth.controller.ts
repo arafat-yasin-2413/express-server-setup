@@ -3,6 +3,13 @@ import { authService } from "./auth.service.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import catchAsync from "../../utils/catchAsync.js";
 
+const userRegister = catchAsync(async (req: Request, res: Response) => {
+    
+    const result = await authService.userRegister(req.body);
+
+    ApiResponse.success(res, 201, "User Registered Successfully", result);
+});
+
 const userLogin = catchAsync(async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
@@ -13,4 +20,5 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
 
 export const authController = {
     userLogin,
+    userRegister,
 };
