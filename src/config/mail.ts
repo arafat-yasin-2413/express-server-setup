@@ -1,11 +1,10 @@
 import { env } from "./env";
 
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer"
 
-// Create a transporter using SMTP
 export const transporter = nodemailer.createTransport({
   host: env.smtpHost,
-  port: env.smtpPort,
+  port: Number(env.smtpPort),
   secure: Number(env.smtpPort) === 465, // true for only port: 465
   auth: {
     user: env.smtpUser,

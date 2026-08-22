@@ -9,6 +9,8 @@ router.post("/login", authController.userLogin)
 router.delete("/delete", authController.deleteUser);
 router.patch("/update", authController.updateUser);
 router.get("/getUser", authController.getUser); 
+router.post("/sendMail", authController.sendMail);
+
 
 // router.post("/register",envValidate, authController.userRegister)
 // router.post("/login",envValidate, authController.userLogin)

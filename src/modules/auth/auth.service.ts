@@ -8,6 +8,7 @@ import type {
 import httpStatus from "http-status-codes";
 import bcrypt from "bcrypt";
 import { env } from "../../config/env.js";
+import { sendEmail } from "../../services/email.service.js";
 
 const getUser = async (id: string) => {
     const user = await prisma.user.findUnique({
@@ -128,10 +129,21 @@ const deleteUser = async (id: string) => {
 
 // hard delete o korte hoy
 
+const sendMail = async()=>{
+    return sendEmail({
+        to: 'yasinarafatsheikh@gmail.com',
+        subject: 'nothing',
+        html: `<p>this email is from express server setup</p>`,
+    })
+}
+
+
 export const authService = {
     userLogin,
     userRegister,
     deleteUser,
     updateUser,
     getUser,
+    sendMail,
+
 };

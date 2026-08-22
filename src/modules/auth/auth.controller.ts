@@ -43,10 +43,18 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
     ApiResponse.success(res, 200, "User get Successfull", result);
 });
 
+const sendMail = catchAsync(async (req: Request, res: Response) => {
+
+    const result = await authService.sendMail();
+
+    ApiResponse.success(res, 200, "Mail Sent Successfull", result);
+});
+
 export const authController = {
     userLogin,
     userRegister,
     deleteUser,
     updateUser,
     getUser,
+    sendMail,
 };
