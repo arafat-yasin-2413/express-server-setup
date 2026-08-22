@@ -9,6 +9,7 @@ import httpStatus from "http-status-codes";
 import bcrypt from "bcrypt";
 import { env } from "../../config/env.js";
 import { sendEmail } from "../../services/email.service.js";
+import { demoTemplate } from "../../template/demoTemplate.js";
 
 const getUser = async (id: string) => {
     const user = await prisma.user.findUnique({
@@ -130,10 +131,14 @@ const deleteUser = async (id: string) => {
 // hard delete o korte hoy
 
 const sendMail = async()=>{
+
+    const name = 'Yasin'
+    const email = 'yasinarafat1396@gmail.com'
+
     return sendEmail({
         to: 'yasinarafatsheikh@gmail.com',
         subject: 'nothing',
-        html: `<p>this email is from express server setup</p>`,
+        html: demoTemplate(name, email),
     })
 }
 

@@ -13,8 +13,15 @@ let server: Server;
 
 const bootstrap = async () => {
     try {
-        connectDatabase();
+        // transporter.verify((error, success) => {
+        //     if (error) {
+        //         console.error(error);
+        //     } else {
+        //         console.log("Server is ready to take our messages");
+        //     }
+        // });
 
+        connectDatabase();
         try {
             await transporter.verify();
             console.log("Server is ready to take our messages");
