@@ -108,7 +108,6 @@ const updateUser = async (id: string, data: userUpdateType) => {
     return updatedUser;
 };
 
-// soft delete kori.
 const deleteUser = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: {
