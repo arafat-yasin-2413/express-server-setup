@@ -1,0 +1,11 @@
+model User {
+  id       String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  phone    String?
+  password String
+  bio      String?
+  products Product[]
+}
+
+// one user --> multiple product One to Many
